@@ -15,7 +15,7 @@ test('getNextKey', () => {
 })
 
 test('compare', () => {
-  const keys = ["A8", "A8", "A#7", "C9", "G#8"].map((v) => new Key(v as `${Key.Note}${number}`));
+  const keys = ["A8", "A8", "A#7", "C9", "G#8"].map((v) => new Key(v as Key.Str));
   expect(Key.compare(keys[0], keys[1])).toBe(0);
   expect(Key.compare(keys[2], keys[0])).toBe(-1);
   expect(Key.compare(keys[0], keys[2])).toBe(1);
