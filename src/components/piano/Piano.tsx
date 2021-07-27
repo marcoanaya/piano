@@ -14,27 +14,26 @@ export default function Piano() {
   
 
   const renderKey = ({
-    note,
+    key,
     isPlaying,
-  }: any) => {
+  }: { key: Key, isPlaying: boolean}) => {
   
     return audioPlayer && (
       <button 
-        className={`piano-${note.type}-key ${isPlaying && "active"}`}
-        onMouseDown={() => audioPlayer.startNote(note.str)}
+        className={`piano-${key.getType()}-key ${isPlaying && "active"}`}
+        onMouseDown={() => audioPlayer.startNote(key)}
         onMouseUp={() => audioPlayer.stopNote()}
       >
-        <span className="piano-text">{note.shortcut}</span>
+        <span className="piano-text">{key.toString()}</span>
       </button>
     )
   }
-  console.log(Key.getKeysInBetween("C2", "D2"))
+
   return (
     <div>
-      {renderKey({
-        note: { type: "natural", shortcut: "A", str: "C#9" },
-        isPlaying: true,
-      })}
+      {
+        Key.getKeysInBetween("C4", "B6").map((key) => renderKey({ key, isPlaying: false }))
+      }
     </div>
   )
 }

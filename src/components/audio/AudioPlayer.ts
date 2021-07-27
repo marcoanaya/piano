@@ -1,4 +1,5 @@
 import * as Tone from "tone";
+import { Key } from "../piano/Key";
 
 export default class AudioPlayer {
   synth: Tone.Synth;
@@ -8,8 +9,8 @@ export default class AudioPlayer {
     this.synth.oscillator.type = "sine";
   }
 
-  startNote(note: any) {
-    this.synth.triggerAttack(note);
+  startNote(key: Key) {
+    this.synth.triggerAttack(key.toString());
   }
 
   stopNote() {
