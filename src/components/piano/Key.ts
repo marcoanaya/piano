@@ -3,6 +3,7 @@ const notes = ["C", "C#", "D", "D#", "E" , "F", "F#", "G", "G#", "A", "A#", "B"]
 export class Key {
   note: Key.Note;
   octave: number;
+  shortcut?: string;
   
   constructor(val: Key.Str) {
     const [, note, octave] = val.match(/([A-G][#]?)([1-9])/)!
@@ -58,7 +59,35 @@ export class Key {
       startKey = startKey.getNextKey();
       keys.push(startKey);
     }
+
     return keys;
+  }
+
+  static addShortcuts(keys: Key[]) {
+    const accidentalShortcuts = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "=", "a","s","d","f","g","h","j","k","l",";", "'", '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ':']
+    const naturalShortcuts = ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', ']', ']', 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '{', '}', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', '<', '>', '?']
+    let [i, j, k] = [0, 0, 0];
+    let naturalCount = 0;
+    const shortcutToKeyMap = new Map();
+    while (i < accidentalShortcuts.length && j < naturalShortcuts.length && k < keys.length) {
+      const key = keys[k];
+      if (key.getType() === "accidental") {
+        if (naturalCount !== 2 && j <= i) {
+          key.shortcut = accidentalShortcuts[i]
+          shortcutToKeyMap.set(accidentalShortcuts[i], key);
+          k++;
+        }
+        i++;
+        naturalCount=0;
+      } else {
+        key.shortcut = naturalShortcuts[j];
+        shortcutToKeyMap.set(naturalShortcuts[j], key);
+        k++;
+        j++;
+        naturalCount++;
+      }
+    }
+    return shortcutToKeyMap;
   }
 }
 
