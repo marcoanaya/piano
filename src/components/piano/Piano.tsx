@@ -19,29 +19,25 @@ export default function Piano() {
   }, [])
 
   useEffect(() => {
-    window.addEventListener("keydown", (e: KeyboardEvent) => {
+    const listener = (handler: (key: Key) => void) => ((e: KeyboardEvent) => {
       if (!e.repeat){
         const key = shortcutToKeyMap?.get(e.key);
-        if (key) onDownHandler(key);
+        if (key) handler(key);
       }
     });
-    window.addEventListener("keyup", (e: KeyboardEvent) => {
-      if (!e.repeat){
-        const key = shortcutToKeyMap?.get(e.key);
-        if (key) onUpHandler(key);
-      }
-    });
+    window.addEventListener("keydown", listener(onDownHandler));
+    window.addEventListener("keyup", listener(onUpHandler));
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shortcutToKeyMap, audioPlayer])
   
   const onDownHandler = (key: Key) => {
     setNotesPlaying((prev) => prev!.set(key, true));
-    audioPlayer?.startNote(key, "bass-electric");
+    audioPlayer?.startNote(key, "clarinet");
   }
 
   const onUpHandler = (key: Key) => {
     setNotesPlaying((prev) => prev!.set(key, false));
-    audioPlayer?.stopNote(key, "bass-electric");
+    audioPlayer?.stopNote(key, "clarinet");
   }
 
   const renderKey = (key: Key, isPlaying: boolean) => {
@@ -60,7 +56,9 @@ export default function Piano() {
   return (
     <div className="piano-container">
       {
-       audioPlayer && notesPlaying && Array.from(notesPlaying, ([key, isPlaying]) => renderKey(key, isPlaying))
+        (audioPlayer && notesPlaying) 
+        ? Array.from(notesPlaying, ([key, isPlaying]) => renderKey(key, isPlaying))
+        : "LOADING"
       }
     </div>
   )
