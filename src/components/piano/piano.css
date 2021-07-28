@@ -1,6 +1,6 @@
 .piano-container {
   display: inline-flex;
-  border-top: 10px solid blue;
+  border-top: 10px solid turquoise;
   width: 100%;
   overflow-x: scroll;
 }
@@ -45,6 +45,6 @@
 }
 
 .active {
-  border-bottom: 10px solid blue;
-  color: blue;
+  border-bottom: 10px solid turquoise;
+  color: turquoise;
 }

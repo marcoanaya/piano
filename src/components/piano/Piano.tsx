@@ -59,6 +59,7 @@ export default function Piano() {
           className={`piano-${key.getType()}-key ${isPlaying && "active"}`}
           onMouseDown={() => onDownHandler(key)}
           onMouseUp={() => onUpHandler(key)}
+          onMouseLeave={() => onUpHandler(key)}
           key={key.toString()}
         >
           <span className="piano-text">{key.toString()}</span>
