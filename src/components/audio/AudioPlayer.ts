@@ -1,5 +1,6 @@
 import React from "react";
 import { Key } from "../piano/Key";
+import { Instrument } from "./constants";
 import { Sampler } from "./Sampler";
 
 export default class AudioPlayer {
@@ -7,14 +8,14 @@ export default class AudioPlayer {
 
   constructor(setAudioPlayer: React.Dispatch<React.SetStateAction<AudioPlayer | null>>) {
     const onload = () => setAudioPlayer(this);
-    this.synth = new Sampler(["piano", "clarinet", "bass-electric"], onload);
+    this.synth = new Sampler(onload);
   }
 
-  startNote(key: Key, instrument: Sampler.Instrument) {
+  startNote(key: Key, instrument: Instrument) {
     this.synth[instrument].triggerAttack(key.toString());
   }
 
-  stopNote(key: Key, instrument: Sampler.Instrument) {
+  stopNote(key: Key, instrument: Instrument) {
     this.synth[instrument].triggerRelease(key.toString());
   }
 }

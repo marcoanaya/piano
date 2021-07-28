@@ -1,4 +1,4 @@
-{
+export const samples = {
   "bass-electric": {
     "A#2": "As2.mp3",
     "A#3": "As3.mp3",
@@ -518,3 +518,7 @@
 
   }
 }
+export declare type Instrument = keyof typeof samples;
+
+export const instruments = Object.keys(samples) as Instrument[];
+

@@ -1,5 +1,8 @@
 .piano-container {
+  display: inline-flex;
   border-top: 10px solid blue;
+  width: 100%;
+  overflow-x: scroll;
 }
 
 .piano-natural-key {
@@ -28,6 +31,11 @@
   color: #dbdbdd;
 }
 
+.piano-accidental-key-wrapper {
+  position: relative;
+  width: 0;
+}
+
 .piano-text {
   height: 100%;
   display: flex;
@@ -37,6 +45,6 @@
 }
 
 .active {
-  border-top: 10px solid blue;
+  border-bottom: 10px solid blue;
   color: blue;
 }
