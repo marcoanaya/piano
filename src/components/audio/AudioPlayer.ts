@@ -1,20 +1,21 @@
-import * as Tone from "tone";
+import React from "react";
 import { Key } from "../piano/Key";
+import { Sampler } from "./Sampler";
 
 export default class AudioPlayer {
-  synth: Tone.Synth;
+  synth: Sampler;
 
-  constructor() {
-    this.synth = new Tone.Synth().toDestination();
-    this.synth.oscillator.type = "sine";
+  constructor(setAudioPlayer: React.Dispatch<React.SetStateAction<AudioPlayer | null>>) {
+    const onload = () => setAudioPlayer(this);
+    this.synth = new Sampler(["piano", "clarinet", "bass-electric"], onload);
   }
 
-  startNote(key: Key) {
-    this.synth.triggerAttack(key.toString());
+  startNote(key: Key, instrument: Sampler.Instrument) {
+    this.synth[instrument].triggerAttack(key.toString());
   }
 
-  stopNote() {
-    this.synth.triggerRelease();
+  stopNote(key: Key, instrument: Sampler.Instrument) {
+    this.synth[instrument].triggerRelease(key.toString());
   }
 }
 

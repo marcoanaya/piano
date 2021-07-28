@@ -1,28 +1,56 @@
 import { useEffect } from 'react';
 import { useState } from 'react';
+import { OrderedMap } from 'immutable';
 import AudioPlayer from '../audio/AudioPlayer';
 import { Key } from './Key';
 import './piano.css';
 
 export default function Piano() {
-  const [audioPlayer, setAudioPlayer] = useState<AudioPlayer | null>(null)
+  const [audioPlayer, setAudioPlayer] = useState<AudioPlayer | null>(null);
+  const [notesPlaying, setNotesPlaying] = useState<OrderedMap<Key, boolean> | null>(null);
+  const [shortcutToKeyMap, setShortcutToKeyMap] = useState<Map<string, Key> | null>(null);
 
   useEffect(() => {
-    setAudioPlayer(new AudioPlayer());
-    console.clear();
-  }, [])
-  
+    const keys = Key.getKeysInBetween("C1", "B6")
+    setShortcutToKeyMap(Key.addShortcuts(keys));
+    setNotesPlaying(OrderedMap(keys.map((k) => [k, false])));
 
-  const renderKey = ({
-    key,
-    isPlaying,
-  }: { key: Key, isPlaying: boolean}) => {
+    new AudioPlayer(setAudioPlayer);    
+  }, [])
+
+  useEffect(() => {
+    window.addEventListener("keydown", (e: KeyboardEvent) => {
+      if (!e.repeat){
+        const key = shortcutToKeyMap?.get(e.key);
+        if (key) onDownHandler(key);
+      }
+    });
+    window.addEventListener("keyup", (e: KeyboardEvent) => {
+      if (!e.repeat){
+        const key = shortcutToKeyMap?.get(e.key);
+        if (key) onUpHandler(key);
+      }
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [shortcutToKeyMap, audioPlayer])
   
-    return audioPlayer && (
+  const onDownHandler = (key: Key) => {
+    setNotesPlaying((prev) => prev!.set(key, true));
+    audioPlayer?.startNote(key, "bass-electric");
+  }
+
+  const onUpHandler = (key: Key) => {
+    setNotesPlaying((prev) => prev!.set(key, false));
+    audioPlayer?.stopNote(key, "bass-electric");
+  }
+
+  const renderKey = (key: Key, isPlaying: boolean) => {
+    return (
       <button 
         className={`piano-${key.getType()}-key ${isPlaying && "active"}`}
-        onMouseDown={() => audioPlayer.startNote(key)}
-        onMouseUp={() => audioPlayer.stopNote()}
+        onMouseDown={() => onDownHandler(key)}
+        onMouseUp={() => onUpHandler(key)}
+        key={key.toString()}
       >
         <span className="piano-text">{key.toString()}</span>
       </button>
@@ -30,9 +58,9 @@ export default function Piano() {
   }
 
   return (
-    <div>
+    <div className="piano-container">
       {
-        Key.getKeysInBetween("C4", "B6").map((key) => renderKey({ key, isPlaying: false }))
+       audioPlayer && notesPlaying && Array.from(notesPlaying, ([key, isPlaying]) => renderKey(key, isPlaying))
       }
     </div>
   )
