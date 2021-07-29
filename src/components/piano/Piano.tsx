@@ -11,10 +11,10 @@ export default function Piano() {
   const [audioPlayer, setAudioPlayer] = useState<AudioPlayer | null>(null);
   const [notesPlaying, setNotesPlaying] = useState<OrderedMap<Key, boolean> | null>(null);
   const [shortcutToKeyMap, setShortcutToKeyMap] = useState<Map<string, Key> | null>(null);
-  const [instrument, setInstrument] = useState<Instrument>("bass-electric");
+  const [instrument, setInstrument] = useState<Instrument>("piano");
 
   useEffect(() => {
-    const keys = Key.getKeysInBetween("C2", "B7")
+    const keys = Key.getKeysInBetween("C1", "B6")
     setShortcutToKeyMap(Key.addShortcuts(keys));
     setNotesPlaying(OrderedMap(keys.map((k) => [k, false])));
 
@@ -71,7 +71,10 @@ export default function Piano() {
       {
         (audioPlayer && notesPlaying) 
         ? <>
-          <select onChange={(e) => setInstrument(e.target.value as Instrument)}>
+          <select 
+            onChange={(e) => setInstrument(e.target.value as Instrument)}
+            defaultValue={instrument}
+          >
             {instruments.map((instrument, i) => (
               <option 
                 value={instrument}
