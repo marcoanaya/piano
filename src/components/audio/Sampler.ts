@@ -1,6 +1,7 @@
 import * as Tone from "tone";
 import { samples, instruments, Instrument } from "./constants";
 
+const MINIFY = true;
 
 export class Sampler {
   [k: string]: Tone.Sampler;
@@ -8,12 +9,21 @@ export class Sampler {
   constructor(onload: () => void, selectedInstruments: Instrument[] = instruments) {
 
     for (const instrument of selectedInstruments) {
-      const urls: {[k:string]: string} = samples[instrument];
+      const baseUrl = `${process.env.PUBLIC_URL}/samples/${instrument}/`;
+      let urls: {[k:string]: string} = samples[instrument];
 
+      if (MINIFY) {
+        const minBy = Math.floor(Object.keys(urls).length / 15) || 1;
+
+        urls = Object.entries(urls).reduce((acc, [key, url], i) => {
+            if (i % minBy === 0) acc[key] = url;
+            return acc;
+        }, {} as {[k:string]: string});
+      }
       this[instrument] = new Tone.Sampler({
         urls, 
         onload, 
-        baseUrl: `${process.env.PUBLIC_URL}/samples/${instrument}/`,
+        baseUrl,
       }).toDestination();
     }
   }

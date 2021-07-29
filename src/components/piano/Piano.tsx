@@ -14,7 +14,7 @@ export default function Piano() {
   const [instrument, setInstrument] = useState<Instrument>("bass-electric");
 
   useEffect(() => {
-    const keys = Key.getKeysInBetween("C2", "B5")
+    const keys = Key.getKeysInBetween("C2", "B7")
     setShortcutToKeyMap(Key.addShortcuts(keys));
     setNotesPlaying(OrderedMap(keys.map((k) => [k, false])));
 
@@ -49,21 +49,20 @@ export default function Piano() {
   }
 
   const renderKey = (key: Key, isPlaying: boolean) => {
-    const wrapper = (button: JSX.Element) => (
-      key.getType() === "accidental"
-      ?  <div className={`piano-${key.getType()}-key-wrapper`}>{button}</div>
-      : button
-    )
-    return wrapper(
+    return (
+      <div 
+        className={`piano-${key.getType()}-key-wrapper`} 
+        key={key.toString()}
+      >
         <button 
           className={`piano-${key.getType()}-key ${isPlaying && "active"}`}
           onMouseDown={() => onDownHandler(key)}
           onMouseUp={() => onUpHandler(key)}
           onMouseLeave={() => onUpHandler(key)}
-          key={key.toString()}
         >
-          <span className="piano-text">{key.toString()}</span>
+          <span className="piano-text">{key.shortcut}</span>
         </button>
+      </div>
     )
   }
 
