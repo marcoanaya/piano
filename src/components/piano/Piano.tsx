@@ -60,32 +60,34 @@ export default function Piano() {
           onMouseUp={() => onUpHandler(key)}
           onMouseLeave={() => onUpHandler(key)}
         >
-          <span className="piano-text">{key.shortcut}</span>
+          <span className="piano-text">{isPlaying && key.toString()}<br/>{key.shortcut}</span>
         </button>
       </div>
     )
   }
 
   return (
+    <div>
+      <select 
+        onChange={(e) => setInstrument(e.target.value as Instrument)}
+        defaultValue={instrument}
+        className="instrument-chooser"
+      >
+        {instruments.map((instrument, i) => (
+          <option 
+            value={instrument}
+            key={i}
+          >{instrument}</option>
+        ))}
+      </select>
     <div className="piano-container">
       {
         (audioPlayer && notesPlaying) 
-        ? <>
-          <select 
-            onChange={(e) => setInstrument(e.target.value as Instrument)}
-            defaultValue={instrument}
-          >
-            {instruments.map((instrument, i) => (
-              <option 
-                value={instrument}
-                key={i}
-              >{instrument}</option>
-            ))}
-          </select>
-          {Array.from(notesPlaying, ([key, isPlaying]) => renderKey(key, isPlaying))}
-        </>
+        ? 
+          Array.from(notesPlaying, ([key, isPlaying]) => renderKey(key, isPlaying))
+        
         : "LOADING"
       }
-    </div>
+    </div></div>
   )
 }

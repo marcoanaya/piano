@@ -1,8 +1,10 @@
 .piano-container {
-  display: inline-flex;
-  border-top: 10px solid turquoise;
+  max-width: 1141px;
+  display:flex;
+  flex-wrap: wrap;
+  border-top: 10px solid darkcyan;
   width: 100%;
-  overflow-x: scroll;
+  justify-content: right;
 }
 
 .piano-natural-key {
@@ -45,6 +47,22 @@
 }
 
 .active {
-  border-bottom: 10px solid turquoise;
-  color: turquoise;
+  border-bottom: 10px solid darkcyan;
+  color: darkcyan;
+}
+
+.instrument-chooser {
+  font-size: 30px;
+  color: darkcyan;
+  border: none;
+  background-color: transparent;
+  resize: none;
+  outline: none;
+  align-self: center;
+}
+
+.instrument-chooser option {
+  color: #444;
+  font-size: 20px;
+  font-weight: 600;
 }
